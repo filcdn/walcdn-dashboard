@@ -10,7 +10,7 @@ const DailyEgress = FileAttachment("./data/daily-egress.json").json();
 
 <div class="hero">
   <body><a href="https://filcdn.com" target="_blank" rel="noopener noreferrer"><img src="media/filcdn-logo.png" alt="FilCDN Logo" width="300" /></a><body>
-    <h2>Dashboard Beta</h2>
+    <h2>FilCDN Dashboard</h2>
 </div>
 
 <h4>Daily Stats</h4>
