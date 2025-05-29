@@ -5,6 +5,7 @@ toc: false
 ```js
 import { LineGraph } from "./components/line-graph.js";
 const DailyRequests = FileAttachment("./data/daily-requests.json").json();
+const DailyEgress = FileAttachment("./data/daily-egress.json").json();
 ```
 
 <div class="hero">
@@ -12,11 +13,14 @@ const DailyRequests = FileAttachment("./data/daily-requests.json").json();
     <h2>Dashboard Beta</h2>
 </div>
 
-<h4>Requests</h4>
+<h4>Daily Stats</h4>
 
 <div class="grid grid-cols-2" style="grid-auto-rows: 500px;">
   <div class="card">${
     resize((width) => LineGraph(DailyRequests, {width, title: "Daily Requests", xKey: "day", yKey: "total_requests", label: "Daily Requests" }))
+  }</div>
+  <div class="card">${
+    resize((width) => LineGraph(DailyEgress, {width, title: "Daily Egress", xKey: "day", yKey: "total_egress", label: "Daily Egress" }))
   }</div>
 </div>
 
