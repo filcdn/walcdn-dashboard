@@ -4,7 +4,7 @@ toc: false
 
 ```js
 import { LineGraph } from "./components/line-graph.js";
-const Requests = FileAttachment("./data/requests.json").json();
+const DailyRequests = FileAttachment("./data/daily-requests.json").json();
 ```
 
 <div class="hero">
@@ -16,10 +16,7 @@ const Requests = FileAttachment("./data/requests.json").json();
 
 <div class="grid grid-cols-2" style="grid-auto-rows: 500px;">
   <div class="card">${
-    resize((width) => LineGraph(CheckerParticipantsCumulative, {width, title: "Checker Network Accounts Created (unique FIL addresses)", xKey: "day", yKey: "participants", label: "Accounts" }))
-  }</div>
-  <div class="card">${
-    resize((width) => LineGraph(CheckerParticipantsMonthlyActive, {width, title: "Monthly Active Checker Network Accounts (unique FIL addresses)", xKey: "month", yKey: "participants", label: "Accounts" }))
+    resize((width) => LineGraph(DailyRequests, {width, title: "Daily Requests", xKey: "day", yKey: "total_requests", label: "Daily Requests" }))
   }</div>
 </div>
 
