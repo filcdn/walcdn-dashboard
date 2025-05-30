@@ -21,7 +21,7 @@ const ClientStats = FileAttachment("./data/client-stats.json").json();
 
 
 ```js
-const cacheHitRate = PlatformStats.total_requests ? (PlatformStats.cache_hit_requests / PlatformStats.total_requests) * 100 : 0;
+const cacheHitRate = PlatformStats.total_requests ? ((PlatformStats.cache_hit_requests / PlatformStats.total_requests) * 100).toFixed(2) : 0;
 ```
 
 <h4>All time Stats</h4>
