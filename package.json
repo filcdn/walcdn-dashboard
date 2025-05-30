@@ -6,7 +6,8 @@
     "build": "observable build",
     "dev": "observable preview",
     "deploy": "observable deploy",
-    "observable": "observable"
+    "observable": "observable",
+    "test": "prettier --check ."
   },
   "dependencies": {
     "@observablehq/framework": "^1.12.0",
@@ -14,6 +15,7 @@
     "d3-time-format": "^4.1.0"
   },
   "devDependencies": {
+    "prettier": "^3.5.3",
     "rimraf": "^5.0.5"
   },
   "engines": {
