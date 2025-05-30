@@ -41,7 +41,7 @@ const cacheHitRate = PlatformStats.total_requests ? (PlatformStats.cache_hit_req
     resize((width) => LineGraph(DailyRequests, {width, title: "Daily Requests", xKey: "day", yKey: "total_requests", label: "Daily Requests" }))
   }</div>
   <div class="card">${
-    resize((width) => LineGraph(DailyEgress, {width, title: "Daily Egress (GiB)", xKey: "day", yKey: "total_egress_gib", label: "Daily Egress (GiB)" }))
+        resize((width) => LineGraph(DailyEgress, {width, title: "Daily Egress (GiB)", xKey: "day", yKey: "total_egress_gib", label: "Daily Egress (GiB)" }))
   }</div>
 </div>
 
