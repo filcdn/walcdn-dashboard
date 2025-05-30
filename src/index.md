@@ -27,8 +27,8 @@ const cacheHitRate = PlatformStats.total_requests ? ((PlatformStats.cache_hit_re
 <h4>All time Stats</h4>
 
 <div class="grid grid-cols-3" style="grid-auto-rows: 100px;">
-    <h2 style="font-weight:normal;">Requests: ${PlatformStats.total_requests}</h2>
-    <h2 style="font-weight:normal;">Total Egress: ${formatBytesIEC(PlatformStats.total_egress_bytes)}</h2>
+    <h2 style="font-weight:normal;">Requests Served: ${PlatformStats.total_requests}</h2>
+    <h2 style="font-weight:normal;">Bytes Served: ${formatBytesIEC(PlatformStats.total_egress_bytes)}</h2>
     <h2 style="font-weight:normal;">Cache Hit Rate: ${cacheHitRate}%</h2>
 </div>
 
@@ -38,10 +38,10 @@ const cacheHitRate = PlatformStats.total_requests ? ((PlatformStats.cache_hit_re
 
 <div class="grid grid-cols-2" style="grid-auto-rows: 500px;">
   <div class="card">${
-    resize((width) => LineGraph(DailyRequests, {width, title: "Daily Requests", xKey: "day", yKey: "total_requests", label: "Daily Requests" }))
+    resize((width) => LineGraph(DailyRequests, {width, title: "Requests Served", xKey: "day", yKey: "total_requests", label: "Requests Served" }))
   }</div>
   <div class="card">${
-        resize((width) => LineGraph(DailyEgress, {width, title: "Daily Egress (GiB)", xKey: "day", yKey: "total_egress_gib", label: "Daily Egress (GiB)" }))
+        resize((width) => LineGraph(DailyEgress, {width, title: "Daily Egress (GiB)", xKey: "day", yKey: "total_egress_gib", label: "Bytes Served (GiB)" }))
   }</div>
 </div>
 
