@@ -3,11 +3,9 @@ import { query } from "./cloudflare-client.js";
 
 const response = await query(`SELECT
   DATE(timestamp) AS day,
-  sum(egress_bytes) AS total_egresss
+  ROUND(SUM(egress_bytes) / 1073741824.0, 2) AS total_egress_gib
 FROM
   retrieval_logs
-WHERE
-  timestamp >= DATE('now', '-30 days')
 GROUP BY
   day
 ORDER BY

@@ -4,14 +4,35 @@ toc: false
 
 ```js
 import { LineGraph } from "./components/line-graph.js";
+import { formatBytesIEC } from "./utils/bytes.js"
+
+const PlatformStats = FileAttachment("./data/platform-stats.json").json();
 const DailyRequests = FileAttachment("./data/daily-requests.json").json();
 const DailyEgress = FileAttachment("./data/daily-egress.json").json();
+const StorageProviderStats = FileAttachment("./data/storage-provider-stats.json").json();
+const ClientStats = FileAttachment("./data/client-stats.json").json();
 ```
 
 <div class="hero">
   <body><a href="https://filcdn.com" target="_blank" rel="noopener noreferrer"><img src="media/filcdn-logo.png" alt="FilCDN Logo" width="300" /></a><body>
     <h2>FilCDN Dashboard</h2>
 </div>
+
+
+
+```js
+const cacheHitRate = PlatformStats.total_requests ? (PlatformStats.cache_hit_requests / PlatformStats.total_requests) * 100 : 0;
+```
+
+<h4>All time Stats</h4>
+
+<div class="grid grid-cols-3" style="grid-auto-rows: 100px;">
+    <h2 style="font-weight:normal;">Requests: ${PlatformStats.total_requests}</h2>
+    <h2 style="font-weight:normal;">Total Egress: ${formatBytesIEC(PlatformStats.total_egress_bytes)}</h2>
+    <h2 style="font-weight:normal;">Cache Hit Rate: ${cacheHitRate}%</h2>
+</div>
+
+<div class="divider"></div>
 
 <h4>Daily Stats</h4>
 
@@ -20,8 +41,57 @@ const DailyEgress = FileAttachment("./data/daily-egress.json").json();
     resize((width) => LineGraph(DailyRequests, {width, title: "Daily Requests", xKey: "day", yKey: "total_requests", label: "Daily Requests" }))
   }</div>
   <div class="card">${
-    resize((width) => LineGraph(DailyEgress, {width, title: "Daily Egress", xKey: "day", yKey: "total_egress", label: "Daily Egress" }))
+    resize((width) => LineGraph(DailyEgress, {width, title: "Daily Egress (GiB)", xKey: "day", yKey: "total_egress_gib", label: "Daily Egress (GiB)" }))
   }</div>
+</div>
+
+<div class="divider"></div>
+
+```js
+const spStats = Inputs.table(StorageProviderStats, {
+  rows: 16,
+  format: {
+    total_egress_bytes: (v) => formatBytesIEC(v),
+    cache_miss_egress_bytes: (v) => formatBytesIEC(v)
+  },
+  sort: {
+    total_egress_bytes: 'desc',
+  },
+  header: {
+    owner_address: "address",
+    total_egress_bytes: "total_egress",
+    cache_miss_egress_bytes: "cache_miss_egress"
+  }
+})
+```
+
+<h4>Storage Provider Stats</h4>
+<div class="card" style="padding: 0;">
+  ${spStats}
+</div>
+
+```js
+const clientStats = Inputs.table(ClientStats, {
+  rows: 16,
+  format: {
+    total_egress_bytes: (v) => formatBytesIEC(v),
+    cache_miss_egress_bytes: (v) => formatBytesIEC(v)
+  },
+  sort: {
+    total_egress_bytes: 'desc',
+  },
+  header: {
+    client_address: "address",
+    total_egress_bytes: "total_egress",
+    cache_miss_egress_bytes: "cache_miss_egress"
+  }
+})
+```
+
+<div class="divider"></div>
+<h4>Client Stats</h4>
+<div class="card" style="padding: 0;">
+  ${clientStats}
 </div>
 
 <style>
@@ -69,6 +139,10 @@ const DailyEgress = FileAttachment("./data/daily-egress.json").json();
 
 .hero img {
   max-width: 20%;
+}
+
+.divider {
+  margin: 50px;
 }
 
 @media (min-width: 640px) {
