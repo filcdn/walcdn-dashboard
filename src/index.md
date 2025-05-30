@@ -6,6 +6,7 @@ toc: false
 import { LineGraph } from "./components/line-graph.js";
 const DailyRequests = FileAttachment("./data/daily-requests.json").json();
 const DailyEgress = FileAttachment("./data/daily-egress.json").json();
+const ResponseCodeBreakdown = FileAttachment("./data/response-code-breakdown.json").json();
 ```
 
 <div class="hero">
@@ -22,6 +23,48 @@ const DailyEgress = FileAttachment("./data/daily-egress.json").json();
   <div class="card">${
     resize((width) => LineGraph(DailyEgress, {width, title: "Daily Egress", xKey: "day", yKey: "total_egress", label: "Daily Egress" }))
   }</div>
+</div>
+
+
+<div class="grid grid-cols-2" style="grid-auto-rows: 500px;">
+  <div>
+    <h4>Response Codes</h4>
+    <body>This section shows the response codes breakdown.</body>
+    <div class="card">
+      ${Plot.plot({
+        x: {label: null, type: "band", ticks: "week" },
+        y: {
+          percent: true
+        },
+        color: {
+          scheme: "Accent",
+          legend: "swatches",
+          label: "code"
+        },
+        marks: [
+          Plot.rectY(ResponseCodeBreakdown, {
+            x: "day",
+            y: "rate",
+            fill: "code",
+            offset: "normalize",
+            sort: {color: null, x: "-y" },
+            interval: 'day',
+            tip: {
+              format: {
+                x: d => new Date(d).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
+                }),
+                y: v => v.toFixed(2),
+                code: true
+              }
+            }
+          })
+        ]
+      })}
+    </div>
+  </div>
 </div>
 
 <style>
