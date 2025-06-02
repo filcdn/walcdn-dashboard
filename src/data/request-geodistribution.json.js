@@ -7,7 +7,8 @@ SELECT
 FROM
   retrieval_logs
 WHERE
- request_country_code IS NOT NULL
+ timestamp >= DATE('now', '-30 days')
+ AND request_country_code IS NOT NULL
  AND request_country_code != "XX"
  AND request_country_code != "T1"
 GROUP BY
