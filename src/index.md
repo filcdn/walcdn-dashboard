@@ -31,7 +31,7 @@ const Countries = FileAttachment("./data/countries.geojson").json()
 
 <div>
   ${
-    resize((width) => WorldMap(Countries, RequestGeodistribution, { width }))
+    resize((width) => WorldMap(Countries, RequestGeodistribution, { width, label: "Requests by Country" }))
   }
 </div>
 
