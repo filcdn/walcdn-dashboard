@@ -1,7 +1,6 @@
 /**
- *
  * @param {string} sql
- * @param {Array<string>} [params=[]]
+ * @param {string[]} [params=[]] Default is `[]`
  * @returns {Promise<any[]>}
  */
 export const query = async (sql, params = []) => {
