@@ -22,4 +22,4 @@ const results = [
 ]
 
 
-process.stdout.write(JSON.stringify(results));
+process.stdout.write(JSON.stringify(results.filter(d => d.country !== "XX" || d.country !== "T1")))
