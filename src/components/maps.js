@@ -6,7 +6,7 @@ export function WorldMap(countries, data, { width = 800, height = 600, label } =
 
     return Plot
     .geo(countries, {
-        fill: (d) => lookupIndex.get(d.properties.adm0_a3_is)?.count,
+        fill: (d) => lookupIndex.get(d.properties.iso_a2)?.count,
         stroke: "gray",
         strokeWidth: 0.5
     })

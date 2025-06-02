@@ -1,25 +1,19 @@
-const results = [
-    {
-        "country": "USA",
-        "count": 150
-    },
-    {
-        "country": "FRA",
-        "count": 25
-    },
-    {
-        "country": "IND",
-        "count": 60
-    },
-    {
-        "country": "DEU",
-        "count": 35
-    },
-    {
-        "country": "SRB",
-        "count": 20
-    }
-]
+import { query } from "./cloudflare-client.js";
 
+const response = await query(`
+SELECT
+  request_country_code country,
+  COUNT(*) AS count
+FROM
+  retrieval_logs
+WHERE
+ request_country_code IS NOT NULL
+ AND request_country_code != "XX"
+ AND request_country_code != "T1"
+GROUP BY
+  request_country_code
+ORDER BY
+  count;
+`, [])
 
-process.stdout.write(JSON.stringify(results.filter(d => d.country !== "XX" || d.country !== "T1")))
+process.stdout.write(JSON.stringify(response.result[0].results))
