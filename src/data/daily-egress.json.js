@@ -1,7 +1,7 @@
+import { query } from './cloudflare-client.js'
 
-import { query } from "./cloudflare-client.js";
-
-const response = await query(`SELECT
+const response = await query(
+  `SELECT
   DATE(timestamp) AS day,
   sum(egress_bytes) AS total_egresss
 FROM
@@ -12,7 +12,8 @@ GROUP BY
   day
 ORDER BY
   day;
-`, [])
+`,
+  [],
+)
 
-
-process.stdout.write(JSON.stringify(response.result[0].results));
+process.stdout.write(JSON.stringify(response.result[0].results))

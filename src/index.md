@@ -3,9 +3,9 @@ toc: false
 ---
 
 ```js
-import { LineGraph } from "./components/line-graph.js";
-const DailyRequests = FileAttachment("./data/daily-requests.json").json();
-const DailyEgress = FileAttachment("./data/daily-egress.json").json();
+import { LineGraph } from './components/line-graph.js'
+const DailyRequests = FileAttachment('./data/daily-requests.json').json()
+const DailyEgress = FileAttachment('./data/daily-egress.json').json()
 ```
 
 <div class="hero">
