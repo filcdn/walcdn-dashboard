@@ -12,6 +12,9 @@ const RequestGeodistribution = FileAttachment(
   './data/request-geodistribution.json',
 ).json()
 const Countries = FileAttachment('./data/countries.geojson').json()
+const ResponseCodeBreakdown = FileAttachment(
+  './data/response-code-breakdown.json',
+).json()
 ```
 
 <div class="hero">
@@ -30,7 +33,52 @@ const Countries = FileAttachment('./data/countries.geojson').json()
   }</div>
 </div>
 
-<div>
+<div class="grid grid-cols-2" style="grid-auto-rows: 500px;">
+  <div>
+    <h4>Response Codes</h4>
+    <body>This section shows the response codes breakdown.</body>
+    <div class="card">
+      ${Plot.plot({
+        x: {label: null, type: "band", ticks: "week" },
+        y: {
+        percent: true
+        },
+        color: {
+        scheme: "Accent",
+        legend: "swatches",
+        label: "code"
+        },
+        marks: [
+        Plot.rectY(ResponseCodeBreakdown.map((d) => ({
+            ...d,
+            day: new Date(d.day),
+        })),
+        {
+            x: "day",
+            y: "rate",
+            fill: "code",
+            offset: "normalize",
+            sort: {color: null, x: "-y" },
+            interval: 'day',
+            tip: {
+            format: {
+                x: d => new Date(d).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+                }),
+                y: v => v.toFixed(2),
+                code: true
+          }
+        }
+        })
+    ]
+    })}
+    </div>
+  </div>
+</div>
+
+<div style="margin-top: 60px;">
   ${
     resize((width) => WorldMap(Countries, RequestGeodistribution, { width, label: "Requests by Country" }))
   }
