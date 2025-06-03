@@ -4,8 +4,14 @@ toc: false
 
 ```js
 import { LineGraph } from './components/line-graph.js'
+import { WorldMap } from './components/maps.js'
+
 const DailyRequests = FileAttachment('./data/daily-requests.json').json()
 const DailyEgress = FileAttachment('./data/daily-egress.json').json()
+const RequestGeodistribution = FileAttachment(
+  './data/request-geodistribution.json',
+).json()
+const Countries = FileAttachment('./data/countries.geojson').json()
 ```
 
 <div class="hero">
@@ -22,6 +28,12 @@ const DailyEgress = FileAttachment('./data/daily-egress.json').json()
   <div class="card">${
     resize((width) => LineGraph(DailyEgress, {width, title: "Daily Egress", xKey: "day", yKey: "total_egress", label: "Daily Egress" }))
   }</div>
+</div>
+
+<div>
+  ${
+    resize((width) => WorldMap(Countries, RequestGeodistribution, { width, label: "Requests by Country" }))
+  }
 </div>
 
 <style>
