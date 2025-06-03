@@ -41,15 +41,19 @@ const ResponseCodeBreakdown = FileAttachment(
       ${Plot.plot({
         x: {label: null, type: "band", ticks: "week" },
         y: {
-          percent: true
+        percent: true
         },
         color: {
-          scheme: "Accent",
-          legend: "swatches",
-          label: "code"
+        scheme: "Accent",
+        legend: "swatches",
+        label: "code"
         },
         marks: [
-          Plot.rectY(ResponseCodeBreakdown, {
+        Plot.rectY(ResponseCodeBreakdown.map((d) => ({
+            ...d,
+            day: new Date(d.day),
+        })),
+        {
             x: "day",
             y: "rate",
             fill: "code",
@@ -57,19 +61,19 @@ const ResponseCodeBreakdown = FileAttachment(
             sort: {color: null, x: "-y" },
             interval: 'day',
             tip: {
-              format: {
+            format: {
                 x: d => new Date(d).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric'
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
                 }),
                 y: v => v.toFixed(2),
                 code: true
-              }
-            }
-          })
-        ]
-      })}
+          }
+        }
+    })
+    ]
+})}
     </div>
   </div>
 </div>

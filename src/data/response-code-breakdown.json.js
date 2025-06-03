@@ -28,8 +28,4 @@ ORDER BY
   [],
 )
 
-const result = response.result[0].results.map((d) => ({
-  ...d,
-  day: new Date(d.day),
-}))
-process.stdout.write(JSON.stringify(result))
+process.stdout.write(JSON.stringify(response.result[0].results))
