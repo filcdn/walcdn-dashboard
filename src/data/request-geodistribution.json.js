@@ -1,6 +1,7 @@
-import { query } from "./cloudflare-client.js";
+import { query } from './cloudflare-client.js'
 
-const response = await query(`
+const response = await query(
+  `
 SELECT
   request_country_code country,
   COUNT(*) AS count
@@ -15,6 +16,8 @@ GROUP BY
   request_country_code
 ORDER BY
   count;
-`, [])
+`,
+  [],
+)
 
 process.stdout.write(JSON.stringify(response.result[0].results))
