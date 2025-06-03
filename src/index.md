@@ -74,7 +74,7 @@ const ResponseCodeBreakdown = FileAttachment(
   </div>
 </div>
 
-<div>
+<div class="grid">
   ${
     resize((width) => WorldMap(Countries, RequestGeodistribution, { width, label: "Requests by Country" }))
   }
