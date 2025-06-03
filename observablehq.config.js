@@ -1,7 +1,7 @@
 // See https://observablehq.com/framework/config for documentation.
 export default {
   // The app’s title; used in the sidebar and webpage titles.
-  title: "FilCDN Dashboard",
+  title: 'FilCDN Dashboard',
 
   // The pages and sections in the sidebar. If you don’t specify this option,
   // all pages will be listed in alphabetical order. Listing pages explicitly
@@ -20,10 +20,10 @@ export default {
   head: '<link rel="icon" href="media/filcdn-logo.png" type="image/png" sizes="32x32"><script defer data-domain="dashboard.filcdn.com" src="https://plausible.io/js/script.js"></script>',
 
   // The path to the source root.
-  root: "src",
+  root: 'src',
 
   // Some additional configuration options and their defaults:
-  theme: "light", // try "light", "dark", "slate", etc.
+  theme: 'light', // try "light", "dark", "slate", etc.
   // header: "", // what to show in the header (HTML)
   // footer: "Built with Observable.", // what to show in the footer (HTML)
   sidebar: false, // whether to show the sidebar
@@ -35,4 +35,4 @@ export default {
   // typographer: false, // smart quotes and other typographic improvements
   // preserveExtension: false, // drop .html from URLs
   // preserveIndex: false, // drop /index from URLs
-};
+}

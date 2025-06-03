@@ -1,6 +1,7 @@
-import { query } from "./cloudflare-client.js";
+import { query } from './cloudflare-client.js'
 
-const response = await query(`
+const response = await query(
+  `
 WITH daily_totals AS (
   SELECT
     DATE(timestamp) AS day,
@@ -23,6 +24,8 @@ GROUP BY
 ORDER BY
   day,
   code;
-`, [])
+`,
+  [],
+)
 
-process.stdout.write(JSON.stringify(response.result[0].results));
+process.stdout.write(JSON.stringify(response.result[0].results))
