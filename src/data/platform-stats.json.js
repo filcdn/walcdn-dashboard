@@ -1,7 +1,7 @@
+import { query } from './cloudflare-client.js'
 
-import { query } from "./cloudflare-client.js";
-
-const response = await query(`
+const response = await query(
+  `
   SELECT
     SUM(CASE WHEN cache_miss THEN 1 ELSE 0 END) AS cache_miss_requests,
     SUM(CASE WHEN NOT cache_miss THEN 1 ELSE 0 END) AS cache_hit_requests,
@@ -9,6 +9,8 @@ const response = await query(`
     COUNT(*) AS total_requests
   FROM
     retrieval_logs;
-`, [])
+`,
+  [],
+)
 
-process.stdout.write(JSON.stringify(response.result[0].results[0]));
+process.stdout.write(JSON.stringify(response.result[0].results[0]))

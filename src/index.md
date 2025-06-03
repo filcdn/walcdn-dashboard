@@ -3,14 +3,24 @@ toc: false
 ---
 
 ```js
-import { LineGraph } from "./components/line-graph.js";
-import { formatBytesIEC } from "./utils/bytes.js"
+import { LineGraph } from './components/line-graph.js'
+import { formatBytesIEC } from './utils/bytes.js'
+import { WorldMap } from './components/maps.js'
 
-const PlatformStats = FileAttachment("./data/platform-stats.json").json();
-const DailyRequests = FileAttachment("./data/daily-requests.json").json();
-const DailyEgress = FileAttachment("./data/daily-egress.json").json();
-const StorageProviderStats = FileAttachment("./data/storage-provider-stats.json").json();
-const ClientStats = FileAttachment("./data/client-stats.json").json();
+const PlatformStats = FileAttachment('./data/platform-stats.json').json()
+const DailyRequests = FileAttachment('./data/daily-requests.json').json()
+const DailyEgress = FileAttachment('./data/daily-egress.json').json()
+const StorageProviderStats = FileAttachment(
+  './data/storage-provider-stats.json',
+).json()
+const ClientStats = FileAttachment('./data/client-stats.json').json()
+const RequestGeodistribution = FileAttachment(
+  './data/request-geodistribution.json',
+).json()
+const Countries = FileAttachment('./data/countries.geojson').json()
+const ResponseCodeBreakdown = FileAttachment(
+  './data/response-code-breakdown.json',
+).json()
 ```
 
 <div class="hero">
@@ -18,10 +28,13 @@ const ClientStats = FileAttachment("./data/client-stats.json").json();
     <h2>FilCDN Dashboard</h2>
 </div>
 
-
-
 ```js
-const cacheHitRate = PlatformStats.total_requests ? ((PlatformStats.cache_hit_requests / PlatformStats.total_requests) * 100).toFixed(2) : 0;
+const cacheHitRate = PlatformStats.total_requests
+  ? (
+      (PlatformStats.cache_hit_requests / PlatformStats.total_requests) *
+      100
+    ).toFixed(2)
+  : 0
 ```
 
 <h4>All time Stats</h4>
@@ -47,24 +60,77 @@ const cacheHitRate = PlatformStats.total_requests ? ((PlatformStats.cache_hit_re
 
 <div class="divider"></div>
 
+<div class="grid grid-cols-2" style="grid-auto-rows: 500px;">
+  <div>
+    <h4>Response Codes</h4>
+    <body>This section shows the response codes breakdown.</body>
+    <div class="card">
+      ${Plot.plot({
+        x: {label: null, type: "band", ticks: "week" },
+        y: {
+        percent: true
+        },
+        color: {
+        scheme: "Accent",
+        legend: "swatches",
+        label: "code"
+        },
+        marks: [
+        Plot.rectY(ResponseCodeBreakdown.map((d) => ({
+            ...d,
+            day: new Date(d.day),
+        })),
+        {
+            x: "day",
+            y: "rate",
+            fill: "code",
+            offset: "normalize",
+            sort: {color: null, x: "-y" },
+            interval: 'day',
+            tip: {
+            format: {
+                x: d => new Date(d).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+                }),
+                y: v => v.toFixed(2),
+                code: true
+          }
+        }
+        })
+    ]
+    })}
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+<div style="margin-top: 60px;">
+  ${
+    resize((width) => WorldMap(Countries, RequestGeodistribution, { width, label: "Requests by Country" }))
+  }
+</div>
+
 ```js
 const spStats = Inputs.table(StorageProviderStats, {
   rows: 16,
   format: {
     total_egress_bytes: (v) => formatBytesIEC(v),
-    cache_miss_egress_bytes: (v) => formatBytesIEC(v)
+    cache_miss_egress_bytes: (v) => formatBytesIEC(v),
   },
   sort: {
     total_egress_bytes: 'desc',
   },
   header: {
-    owner_address: "address",
-    total_egress_bytes: "total_egress",
-    cache_miss_egress_bytes: "cache_miss_egress"
-  }
+    owner_address: 'address',
+    total_egress_bytes: 'total_egress',
+    cache_miss_egress_bytes: 'cache_miss_egress',
+  },
 })
 ```
 
+<div class="divider"></div>
 <h4>Storage Provider Stats</h4>
 <div class="card" style="padding: 0;">
   ${spStats}
@@ -75,16 +141,16 @@ const clientStats = Inputs.table(ClientStats, {
   rows: 16,
   format: {
     total_egress_bytes: (v) => formatBytesIEC(v),
-    cache_miss_egress_bytes: (v) => formatBytesIEC(v)
+    cache_miss_egress_bytes: (v) => formatBytesIEC(v),
   },
   sort: {
     total_egress_bytes: 'desc',
   },
   header: {
-    client_address: "address",
-    total_egress_bytes: "total_egress",
-    cache_miss_egress_bytes: "cache_miss_egress"
-  }
+    client_address: 'address',
+    total_egress_bytes: 'total_egress',
+    cache_miss_egress_bytes: 'cache_miss_egress',
+  },
 })
 ```
 
