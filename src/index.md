@@ -71,14 +71,14 @@ const ResponseCodeBreakdown = FileAttachment(
                 code: true
           }
         }
-    })
+        })
     ]
-})}
+    })}
     </div>
   </div>
 </div>
 
-<div class="grid">
+<div style="margin-top: 60px;">
   ${
     resize((width) => WorldMap(Countries, RequestGeodistribution, { width, label: "Requests by Country" }))
   }
