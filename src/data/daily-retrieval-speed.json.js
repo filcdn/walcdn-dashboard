@@ -2,7 +2,7 @@ import { query } from './cloudflare-client.js'
 
 const response = await query(
   `
-WITH speeds AS (
+WITH retrieval_speeds AS (
     SELECT
         DATE(timestamp) AS day,
         (egress_bytes * 8.0) / (fetch_ttlb / 1000.0) / 1_000_000 AS retrieval_speed_mbps
@@ -12,32 +12,27 @@ WITH speeds AS (
         cache_miss = 1 AND
         fetch_ttlb > 0
 ),
-ordered_speeds AS (
-    SELECT
-        day,
-        retrieval_speed_mbps,
-        ROW_NUMBER() OVER (PARTITION BY day ORDER BY retrieval_speed_mbps) AS row_num,
-        COUNT(*) OVER (PARTITION BY day) AS total_count
-    FROM
-        speeds
+percentile_buckets AS (
+  SELECT 
+    day,
+    retrieval_speed_mbps,
+    NTILE(100) OVER (ORDER BY retrieval_speed_mbps) as percentile_bucket -- Create 100 buckets for percentiles
+  FROM retrieval_speeds
 )
 SELECT
     day,
     ROUND(AVG(retrieval_speed_mbps), 2) AS avg_retrieval_speed_mbps,
     (
         SELECT
-            retrieval_speed_mbps
+            MIN(retrieval_speed_mbps)
         FROM
-            ordered_speeds os
+            percentile_buckets pb
         WHERE
-            os.day = s.day AND
-            os.row_num >= (os.total_count * 0.95)
-        ORDER BY
-            retrieval_speed_mbps
-        LIMIT 1
+            pb.day = rs.day AND
+            pb.percentile_bucket = 96 -- 96th bucket represents the 95th percentile
     ) AS p95_retrieval_speed_mbps
 FROM
-    speeds s
+    retrieval_speeds rs
 GROUP BY
     day
 ORDER BY

@@ -2,7 +2,7 @@ import { query } from './cloudflare-client.js'
 
 const response = await query(
   `
-WITH speeds AS (
+WITH retrieval_speeds AS (
     SELECT
         owner_address,
         (egress_bytes * 8.0) / (fetch_ttlb / 1000.0) / 1_000_000 AS retrieval_speed_mbps
@@ -12,14 +12,12 @@ WITH speeds AS (
         cache_miss = 1 AND
         fetch_ttlb > 0
 ),
-ordered_speeds AS (
-    SELECT
-        owner_address,
-        retrieval_speed_mbps,
-        ROW_NUMBER() OVER (PARTITION BY owner_address ORDER BY retrieval_speed_mbps) AS row_num,
-        COUNT(*) OVER (PARTITION BY owner_address) AS total_count
-    FROM
-        speeds
+percentile_buckets AS (
+  SELECT 
+    owner_address,
+    retrieval_speed_mbps,
+    NTILE(100) OVER (ORDER BY retrieval_speed_mbps) as percentile_bucket -- Create 100 buckets for percentiles
+  FROM retrieval_speeds
 )
 SELECT
     rl.owner_address,
@@ -31,15 +29,12 @@ SELECT
     ROUND(AVG(CASE WHEN rl.cache_miss THEN (rl.egress_bytes * 8.0) / (rl.fetch_ttlb / 1000.0) / 1_000_000 ELSE NULL END), 2) AS avg_cache_miss_retrieval_speed_mbps,
     (
         SELECT
-            os.retrieval_speed_mbps
+            MIN(pb.retrieval_speed_mbps)
         FROM
-            ordered_speeds os
+            percentile_buckets pb
         WHERE
-            os.owner_address = rl.owner_address
-            AND os.row_num >= (os.total_count * 0.95)
-        ORDER BY
-            os.retrieval_speed_mbps
-        LIMIT 1
+            pb.owner_address = rl.owner_address
+            AND percentile_bucket = 96 -- 96th bucket represents the 95th percentile
     ) AS p95_cache_miss_retrieval_speed_mbps
 FROM
     retrieval_logs rl
@@ -50,5 +45,7 @@ ORDER BY
 `,
   [],
 )
+
+console.log(response)
 
 process.stdout.write(JSON.stringify(response.result[0].results))
