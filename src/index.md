@@ -21,6 +21,9 @@ const Countries = FileAttachment('./data/countries.geojson').json()
 const ResponseCodeBreakdown = FileAttachment(
   './data/response-code-breakdown.json',
 ).json()
+const DailyRetrievalSpeed = FileAttachment(
+  './data/daily-retrieval-speed.json',
+).json()
 ```
 
 <div class="hero">
@@ -60,7 +63,59 @@ const cacheHitRate = PlatformStats.total_requests
 
 <div class="divider"></div>
 
+```js
+const tidyDailyRetrievalSpeed = DailyRetrievalSpeed.map((d) => ({
+  ...d,
+  day: new Date(d.day),
+}))
+```
+
 <div class="grid grid-cols-2" style="grid-auto-rows: 500px;">
+  <div>
+    <h4>Daily Retrieval Speeds (Cache-Miss)</h4>
+    <body>This section shows the retrieval speeds for all storage providers on cache-miss.</body>
+    <div class="card">
+      ${Plot.plot({
+      x: { label: null },
+      y: { grid: true, label: 'Mpbs' },
+      marks: [
+        Plot.ruleY([0]),
+        Plot.lineY(tidyDailyRetrievalSpeed, {
+          x: 'day',
+          y: 'avg_retrieval_speed_mbps',
+          stroke: '#4FF8C9',
+          tip: {
+            format: {
+              x: d => new Date(d).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+              }),
+              y: v => v ? `AVG: ${v.toFixed(2)} Mbps` : 'N/A',
+              type: true
+            }
+          }
+        }),
+        Plot.lineY(tidyDailyRetrievalSpeed, {
+          x: 'day',
+          y: 'p95_retrieval_speed_mbps',
+          stroke: '#FFA500',
+          tip: {
+            format: {
+              x: d => new Date(d).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+              }),
+              y: v => v ? `P95: ${v.toFixed(2)} Mbps` : 'N/A',
+              type: true
+            }
+          }
+        }),
+      ]
+    })}
+    </div>
+    </div>
   <div>
     <h4>Response Codes</h4>
     <body>This section shows the response codes breakdown.</body>
