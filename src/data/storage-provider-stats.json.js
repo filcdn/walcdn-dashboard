@@ -46,6 +46,4 @@ ORDER BY
   [],
 )
 
-console.log(response)
-
 process.stdout.write(JSON.stringify(response.result[0].results))
