@@ -6,7 +6,8 @@ const response = await query(
     SUM(CASE WHEN cache_miss THEN 1 ELSE 0 END) AS cache_miss_requests,
     SUM(CASE WHEN NOT cache_miss THEN 1 ELSE 0 END) AS cache_hit_requests,
     SUM(egress_bytes) AS total_egress_bytes,
-    COUNT(*) AS total_requests
+    COUNT(*) AS total_requests,
+    AVG(worker_ttfb) AS avg_client_ttfb
   FROM
     retrieval_logs;
 `,
