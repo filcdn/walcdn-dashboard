@@ -39,12 +39,11 @@ const cacheHitRate = PlatformStats.total_requests
 
 <h4>All time Stats</h4>
 
-<div class="grid grid-cols-3">
+<div class="grid grid-cols-4">
     <h4 style="font-weight:normal;">Requests Served: ${PlatformStats.total_requests}</h4>
     <h4 style="font-weight:normal;">Bytes Served: ${formatBytesIEC(PlatformStats.total_egress_bytes)}</h4>
     <h4 style="font-weight:normal;">Cache Hit Rate: ${cacheHitRate}%</h4>
     <h4 style="font-weight:normal;">Average Client TTFB: ${PlatformStats.avg_client_ttfb.toFixed(2) ?? 0} ms</h4>
-    <h4 style="font-weight:normal;">Average SP Retrieval TTFB: ${PlatformStats.avg_sp_retrieval_ttfb.toFixed(2) ?? 0} ms</h4>
 </div>
 
 <div class="divider"></div>
