@@ -4,7 +4,7 @@ const response = await query(
   `
 WITH retrieval_speeds AS (
     SELECT
-        owner_address,
+        aggregator_url,
         (egress_bytes * 8.0) / (fetch_ttlb / 1000.0) / 1_000_000 AS retrieval_speed_mbps
     FROM
         retrieval_logs
@@ -14,13 +14,13 @@ WITH retrieval_speeds AS (
 ),
 percentile_buckets AS (
   SELECT 
-    owner_address,
+    aggregator_url,
     retrieval_speed_mbps,
     NTILE(100) OVER (ORDER BY retrieval_speed_mbps) as percentile_bucket -- Create 100 buckets for percentiles
   FROM retrieval_speeds
 )
 SELECT
-    rl.owner_address,
+    rl.aggregator_url,
     COUNT(*) AS total_requests,
     SUM(CASE WHEN rl.cache_miss THEN 1 ELSE 0 END) AS cache_miss_requests,
     SUM(rl.egress_bytes) AS total_egress_bytes,
@@ -33,7 +33,7 @@ SELECT
         FROM
             percentile_buckets pb
         WHERE
-            pb.owner_address = rl.owner_address
+            pb.aggregator_url = rl.aggregator_url
             AND percentile_bucket = 96 -- 96th bucket represents the 95th percentile
     ) AS p95_cache_miss_retrieval_speed_mbps,
     ROUND(
@@ -43,7 +43,7 @@ SELECT
 FROM
     retrieval_logs rl
 GROUP BY
-    rl.owner_address
+    rl.aggregator_url
 ORDER BY
     total_requests DESC;
 `,

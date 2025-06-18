@@ -27,8 +27,8 @@ const DailyRetrievalSpeed = FileAttachment(
 ```
 
 <div class="hero">
-  <body><a href="https://filcdn.com" target="_blank" rel="noopener noreferrer"><img src="media/filcdn-logo.png" alt="FilCDN Logo" width="300" /></a><body>
-    <h2>FilCDN Dashboard</h2>
+  <body><a href="https://dashboard.walcdn.com" target="_blank" rel="noopener noreferrer"><img src="media/walcdn-logo.svg" alt="WalCDN Logo" width="300" /></a><body>
+    <h2>WalCDN Dashboard</h2>
 </div>
 
 ```js
@@ -179,7 +179,6 @@ const spStats = Inputs.table(StorageProviderStats, {
     total_egress_bytes: 'desc',
   },
   header: {
-    owner_address: 'address',
     total_egress_bytes: 'total_egress',
     cache_miss_egress_bytes: 'cache_miss_egress',
   },
